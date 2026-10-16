@@ -1,0 +1,37 @@
+<div class="page">
+  <header class="header">
+    <div>
+      <h1>PDF Q&A Assistant</h1>
+      <p>Upload a PDF and ask questions about its contents.</p>
+    </div>
+  </header>
+
+  <section class="upload-card">
+    <h2>Upload your PDF</h2>
+    <p>Select a PDF document to get started.</p>
+
+    <input
+      type="file"
+      accept=".pdf,application/pdf"
+      (change)="onFileSelected($event)"
+    />
+
+    @if (selectedFile) {
+      <p class="selected-file">
+        Selected: {{ selectedFile.name }}
+      </p>
+    }
+
+    <button
+      (click)="uploadPdf()"
+      [disabled]="!selectedFile"
+    >
+      Upload PDF
+    </button>
+  </section>
+
+  <section class="documents-section">
+    <h2>Your Documents</h2>
+    <p>Your uploaded PDFs will appear here.</p>
+  </section>
+</div>

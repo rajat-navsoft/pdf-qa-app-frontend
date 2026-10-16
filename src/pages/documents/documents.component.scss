@@ -1,0 +1,55 @@
+.page {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  color: #222;
+}
+
+.header {
+  margin-bottom: 32px;
+}
+
+.header h1 {
+  margin-bottom: 8px;
+}
+
+.header p,
+.upload-card p,
+.documents-section p {
+  color: #666;
+}
+
+.upload-card {
+  padding: 28px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.upload-card input {
+  display: block;
+  margin: 20px 0;
+}
+
+button {
+  padding: 11px 20px;
+  border: none;
+  border-radius: 6px;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+}
+
+button:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+}
+
+.selected-file {
+  font-weight: bold;
+}
+
+.documents-section {
+  margin-top: 32px;
+}
