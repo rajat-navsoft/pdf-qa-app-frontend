@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, delay, of } from 'rxjs';
 
@@ -26,7 +26,7 @@ export interface ChatResponse {
 }
 
 // Set to false once the FastAPI backend exposes these endpoints.
-const USE_MOCK = true;
+const USE_MOCK = false;
 const API_URL = 'http://localhost:8000';
 
 @Injectable({ providedIn: 'root' })
@@ -85,4 +85,17 @@ export class PdfQaService {
     }
     return this.http.post<ChatResponse>(`${API_URL}/chat`, { message, history });
   }
+}
+
+// Extracts a readable message from a failed request (FastAPI returns `{ detail }`).
+export function errorMessage(err: unknown, fallback: string): string {
+  if (err instanceof HttpErrorResponse) {
+    if (err.status === 0) {
+      return `Can't reach the server at ${API_URL}. Is the backend running?`;
+    }
+    if (typeof err.error?.detail === 'string') {
+      return err.error.detail;
+    }
+  }
+  return fallback;
 }

@@ -1,6 +1,6 @@
 import { Component, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ChatResponse, ChatTurn, PdfQaService } from '../../core/services/pdf-qa.service';
+import { ChatResponse, ChatTurn, PdfQaService, errorMessage } from '../../core/services/pdf-qa.service';
 
 interface ChatbotMessage {
   role: 'user' | 'assistant' | 'error';
@@ -70,8 +70,8 @@ export class ChatbotComponent {
         this.push({ role: 'assistant', text: res.reply, sources: res.sources });
         this.isSending.set(false);
       },
-      error: () => {
-        this.push({ role: 'error', text: 'Something went wrong. Please try again.' });
+      error: (err) => {
+        this.push({ role: 'error', text: errorMessage(err, 'Something went wrong. Please try again.') });
         this.isSending.set(false);
       },
     });

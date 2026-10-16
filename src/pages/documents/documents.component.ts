@@ -1,7 +1,7 @@
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { Component, ElementRef, computed, inject, signal, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { PdfQaService, UploadedDocument } from '../../core/services/pdf-qa.service';
+import { PdfQaService, UploadedDocument, errorMessage } from '../../core/services/pdf-qa.service';
 
 interface ChatMessage {
   role: 'user' | 'assistant' | 'error';
@@ -100,8 +100,8 @@ export class DocumentsComponent {
         this.activeDocId.set(doc.id);
         this.isUploading.set(false);
       },
-      error: () => {
-        this.uploadError.set('Upload failed. Please try again.');
+      error: (err) => {
+        this.uploadError.set(errorMessage(err, 'Upload failed. Please try again.'));
         this.isUploading.set(false);
       },
     });
@@ -142,8 +142,8 @@ export class DocumentsComponent {
         this.pushMessage(docId, { role: 'assistant', text: res.answer, sources: res.sources });
         this.isAsking.set(false);
       },
-      error: () => {
-        this.pushMessage(docId, { role: 'error', text: 'Something went wrong. Please try again.' });
+      error: (err) => {
+        this.pushMessage(docId, { role: 'error', text: errorMessage(err, 'Something went wrong. Please try again.') });
         this.isAsking.set(false);
       },
     });
