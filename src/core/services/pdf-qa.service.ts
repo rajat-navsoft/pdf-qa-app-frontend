@@ -15,6 +15,16 @@ export interface AskResponse {
   sources?: { page: number; snippet: string }[];
 }
 
+export interface ChatTurn {
+  role: 'user' | 'assistant';
+  text: string;
+}
+
+export interface ChatResponse {
+  reply: string;
+  sources?: { documentName: string; page: number; snippet: string }[];
+}
+
 // Set to false once the FastAPI backend exposes these endpoints.
 const USE_MOCK = true;
 const API_URL = 'http://localhost:8000';
@@ -62,5 +72,17 @@ export class PdfQaService {
       }).pipe(delay(1000));
     }
     return this.http.post<AskResponse>(`${API_URL}/documents/${documentId}/ask`, { question });
+  }
+
+  // General assistant chat that searches across all uploaded documents.
+  chat(message: string, history: ChatTurn[]): Observable<ChatResponse> {
+    if (USE_MOCK) {
+      return of({
+        reply:
+          `You asked: "${message}". Once the backend is connected, I'll search ` +
+          'across all your uploaded documents to answer.',
+      }).pipe(delay(900));
+    }
+    return this.http.post<ChatResponse>(`${API_URL}/chat`, { message, history });
   }
 }

@@ -1,0 +1,99 @@
+@if (isOpen()) {
+  <section class="window" role="dialog" aria-label="Document assistant">
+    <header class="header">
+      <span class="avatar" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="8" width="18" height="12" rx="3" />
+          <path d="M12 8V4M8 14h.01M16 14h.01" />
+        </svg>
+      </span>
+      <div class="title">
+        <strong>Assistant</strong>
+        <small><span class="dot" aria-hidden="true"></span>Searches all your documents</small>
+      </div>
+      <button type="button" class="icon-btn" (click)="clear()" aria-label="Clear conversation" title="Clear conversation">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6" />
+        </svg>
+      </button>
+      <button type="button" class="icon-btn" (click)="close()" aria-label="Close assistant">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M18 6L6 18M6 6l12 12" />
+        </svg>
+      </button>
+    </header>
+
+    <div class="body" #chatScroll aria-live="polite">
+      @for (msg of messages(); track $index) {
+        <div class="message" [class]="msg.role">
+          <div class="bubble">
+            <p>{{ msg.text }}</p>
+            @if (msg.sources?.length) {
+              <div class="sources">
+                @for (src of msg.sources; track $index) {
+                  <span class="source" [title]="src.snippet">{{ src.documentName }} · p.{{ src.page }}</span>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      @if (messages().length === 1) {
+        <div class="quick-replies">
+          @for (q of quickReplies; track q) {
+            <button type="button" class="chip" (click)="send(q)">{{ q }}</button>
+          }
+        </div>
+      }
+
+      @if (isSending()) {
+        <div class="message assistant">
+          <div class="bubble typing" aria-label="Thinking">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+      }
+    </div>
+
+    <form class="composer" (ngSubmit)="send()">
+      <label for="chatbot-input" class="visually-hidden">Message</label>
+      <textarea
+        #input
+        id="chatbot-input"
+        name="message"
+        rows="1"
+        placeholder="Type a message…"
+        [ngModel]="draft()"
+        (ngModelChange)="draft.set($event)"
+        (keydown)="onKeydown($event)"
+        [disabled]="isSending()"
+      ></textarea>
+      <button type="submit" class="send" [disabled]="!draft().trim() || isSending()" aria-label="Send">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M22 2L11 13" />
+          <path d="M22 2l-7 20-4-9-9-4z" />
+        </svg>
+      </button>
+    </form>
+  </section>
+}
+
+<button
+  type="button"
+  class="launcher"
+  [class.open]="isOpen()"
+  (click)="toggle()"
+  [attr.aria-label]="isOpen() ? 'Close assistant' : 'Open assistant'"
+  [attr.aria-expanded]="isOpen()"
+>
+  @if (isOpen()) {
+    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M6 9l6 6 6-6" />
+    </svg>
+  } @else {
+    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+    </svg>
+  }
+</button>
