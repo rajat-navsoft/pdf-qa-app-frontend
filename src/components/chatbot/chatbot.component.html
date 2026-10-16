@@ -2,7 +2,7 @@
   <section class="window" role="dialog" aria-label="Document assistant">
     <header class="header">
       <span class="avatar" aria-hidden="true">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <rect x="3" y="8" width="18" height="12" rx="3" />
           <path d="M12 8V4M8 14h.01M16 14h.01" />
         </svg>
@@ -26,6 +26,9 @@
     <div class="body" #chatScroll aria-live="polite">
       @for (msg of messages(); track $index) {
         <div class="message" [class]="msg.role">
+          @if (msg.role !== 'user') {
+            <span class="bot-avatar" aria-hidden="true">AI</span>
+          }
           <div class="bubble">
             <p>{{ msg.text }}</p>
             @if (msg.sources?.length) {
@@ -49,6 +52,7 @@
 
       @if (isSending()) {
         <div class="message assistant">
+          <span class="bot-avatar" aria-hidden="true">AI</span>
           <div class="bubble typing" aria-label="Thinking">
             <span></span><span></span><span></span>
           </div>
@@ -57,24 +61,25 @@
     </div>
 
     <form class="composer" (ngSubmit)="send()">
-      <label for="chatbot-input" class="visually-hidden">Message</label>
-      <textarea
-        #input
-        id="chatbot-input"
-        name="message"
-        rows="1"
-        placeholder="Type a message…"
-        [ngModel]="draft()"
-        (ngModelChange)="draft.set($event)"
-        (keydown)="onKeydown($event)"
-        [disabled]="isSending()"
-      ></textarea>
-      <button type="submit" class="send" [disabled]="!draft().trim() || isSending()" aria-label="Send">
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M22 2L11 13" />
-          <path d="M22 2l-7 20-4-9-9-4z" />
-        </svg>
-      </button>
+      <div class="composer-box">
+        <label for="chatbot-input" class="visually-hidden">Message</label>
+        <textarea
+          #input
+          id="chatbot-input"
+          name="message"
+          rows="1"
+          placeholder="Ask across all documents…"
+          [ngModel]="draft()"
+          (ngModelChange)="draft.set($event)"
+          (keydown)="onKeydown($event)"
+          [disabled]="isSending()"
+        ></textarea>
+        <button type="submit" class="send" [disabled]="!draft().trim() || isSending()" aria-label="Send">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 19V5M5 12l7-7 7 7" />
+          </svg>
+        </button>
+      </div>
     </form>
   </section>
 }
@@ -88,11 +93,11 @@
   [attr.aria-expanded]="isOpen()"
 >
   @if (isOpen()) {
-    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
       <path d="M6 9l6 6 6-6" />
     </svg>
   } @else {
-    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
     </svg>
   }

@@ -14,7 +14,6 @@ const MAX_FILE_SIZE_MB = 20;
 @Component({
   imports: [FormsModule, DatePipe, DecimalPipe],
   selector: 'app-documents',
-  styleUrl: './documents.component.scss',
   templateUrl: './documents.component.html',
 })
 export class DocumentsComponent {

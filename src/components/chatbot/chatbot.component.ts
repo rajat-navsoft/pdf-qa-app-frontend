@@ -16,7 +16,6 @@ const WELCOME: ChatbotMessage = {
 @Component({
   imports: [FormsModule],
   selector: 'app-chatbot',
-  styleUrl: './chatbot.component.scss',
   templateUrl: './chatbot.component.html',
   host: {
     '(document:keydown.escape)': 'close()',
